@@ -216,7 +216,7 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
             
             // Call your Netlify function
-            fetch('/.netlify/functions/chat', {
+            fetch('https://healthroad.netlify.app/.netlify/functions/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
