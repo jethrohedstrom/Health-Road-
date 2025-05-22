@@ -194,8 +194,6 @@
         </footer>
     </div>
     
-    <!-- This is a placeholder for your actual chatbot implementation -->
-    <!-- You'll need to replace this with code that connects to your AI service -->
     <script>
         const chatMessages = document.getElementById('chatMessages');
         const userInput = document.getElementById('userInput');
@@ -210,13 +208,37 @@
             addMessage(message, 'user');
             userInput.value = '';
             
-            // Here you would normally call your AI API
-            // For now, we'll just simulate a response after a short delay
-            setTimeout(() => {
-                // This is where you'd replace with actual AI integration
-                const response = "This is a placeholder response. In the actual implementation, this would be replaced with a response from your AI assistant API.";
-                addMessage(response, 'bot');
-            }, 1000);
+            // Show loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('message', 'bot-message');
+            loadingDiv.textContent = 'Thinking...';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Call your Netlify function
+            fetch('https://healthroad.netlify.app/.netlify/functions/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove loading indicator
+                chatMessages.removeChild(loadingDiv);
+                
+                // Add bot response
+                addMessage(data.response, 'bot');
+            })
+            .catch(error => {
+                // Remove loading indicator
+                chatMessages.removeChild(loadingDiv);
+                
+                // Add error message
+                addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+                console.error('Error:', error);
+            });
         }
         
         // Add a message to the chat
