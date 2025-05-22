@@ -19,7 +19,7 @@ exports.handler = async function(event, context) {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': 'https://healthcaresystem.com.au'
       },
       body: JSON.stringify({
         response: `Test response: You said "${userMessage}". OpenAI connection coming next!`
