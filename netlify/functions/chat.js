@@ -1,8 +1,11 @@
 const OpenAI = require('openai');
 
 exports.handler = async function(event, context) {
+  console.log('Function started');
+  
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
+    console.log('Method not allowed:', event.httpMethod);
     return { 
       statusCode: 405, 
       body: 'Method Not Allowed' 
@@ -10,40 +13,51 @@ exports.handler = async function(event, context) {
   }
 
   try {
+    console.log('Parsing request body');
+    const body = JSON.parse(event.body);
+    const userMessage = body.message;
+    console.log('User message:', userMessage);
+
+    // Check if environment variables exist
+    console.log('API Key exists:', !!process.env.OPENAI_API_KEY);
+    console.log('Assistant ID exists:', !!process.env.ASSISTANT_ID);
+    console.log('Assistant ID value:', process.env.ASSISTANT_ID);
+
     // Initialize OpenAI with API key from environment variable
+    console.log('Initializing OpenAI');
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
 
-    // Get the message from the request
-    const body = JSON.parse(event.body);
-    const userMessage = body.message;
-
-    // Create a new thread for this conversation
+    console.log('Creating thread');
     const thread = await openai.beta.threads.create();
+    console.log('Thread created:', thread.id);
 
     // Add the user's message to the thread
+    console.log('Adding message to thread');
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
       content: userMessage
     });
 
-    // Run the assistant on this thread
+    console.log('Running assistant');
     const run = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: process.env.ASSISTANT_ID
     });
 
-    // Wait for the run to complete
+    console.log('Waiting for completion');
     let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
     
     while (runStatus.status === 'in_progress' || runStatus.status === 'queued') {
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+      await new Promise(resolve => setTimeout(resolve, 1000));
       runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+      console.log('Run status:', runStatus.status);
     }
 
-    // Get the assistant's response
+    console.log('Getting messages');
     const messages = await openai.beta.threads.messages.list(thread.id);
     const assistantMessage = messages.data[0].content[0].text.value;
+    console.log('Assistant response:', assistantMessage);
 
     return {
       statusCode: 200,
@@ -57,7 +71,7 @@ exports.handler = async function(event, context) {
     };
     
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Detailed error:', error);
     return {
       statusCode: 500,
       headers: {
