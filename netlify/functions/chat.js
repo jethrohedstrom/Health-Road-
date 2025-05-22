@@ -1,9 +1,22 @@
 const OpenAI = require('openai');
 
 exports.handler = async function(event, context) {
-  console.log('Function started');
+  console.log('Function started, method:', event.httpMethod);
   
-  // Only allow POST requests
+  // Handle CORS preflight request
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': 'https://healthcaresystem.com.au',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST'
+      },
+      body: ''
+    };
+  }
+
+  // Only allow POST requests after handling OPTIONS
   if (event.httpMethod !== 'POST') {
     console.log('Method not allowed:', event.httpMethod);
     return { 
@@ -21,7 +34,6 @@ exports.handler = async function(event, context) {
     // Check if environment variables exist
     console.log('API Key exists:', !!process.env.OPENAI_API_KEY);
     console.log('Assistant ID exists:', !!process.env.ASSISTANT_ID);
-    console.log('Assistant ID value:', process.env.ASSISTANT_ID);
 
     // Initialize OpenAI with API key from environment variable
     console.log('Initializing OpenAI');
@@ -57,7 +69,7 @@ exports.handler = async function(event, context) {
     console.log('Getting messages');
     const messages = await openai.beta.threads.messages.list(thread.id);
     const assistantMessage = messages.data[0].content[0].text.value;
-    console.log('Assistant response:', assistantMessage);
+    console.log('Assistant response received');
 
     return {
       statusCode: 200,
