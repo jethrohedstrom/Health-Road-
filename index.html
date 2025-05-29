@@ -241,24 +241,17 @@
             });
         }
         
-        // Add a message to the chat
-        function addMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
-            messageDiv.textContent = text;
-            chatMessages.appendChild(messageDiv);
-            
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        
-        // Event listeners
-        sendButton.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-    </script>
+  <!--
+<script>
+  function addMessage(...) {
+    ...
+  }
+
+  sendButton.addEventListener(...);
+  ...
+</script>
+-->
+
 <script src="https://www.chatbase.co/embed.min.js"
   data-chatbot-id="RzziC6RAPn5Vtf4dCnWes"
   defer>
