@@ -1,98 +1,123 @@
-const OpenAI = require('openai');
+exports.handler = async (event, context) => {
+  // Handle CORS
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json',
+  };
 
-exports.handler = async function(event, context) {
-  console.log('Function started, method:', event.httpMethod);
-  
-  // Handle CORS preflight request
+  // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': 'https://healthcaresystem.com.au',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST'
-      },
-      body: ''
+      headers,
+      body: '',
     };
   }
 
-  // Only allow POST requests after handling OPTIONS
+  // Only allow POST requests
   if (event.httpMethod !== 'POST') {
-    console.log('Method not allowed:', event.httpMethod);
-    return { 
-      statusCode: 405, 
-      body: 'Method Not Allowed' 
+    return {
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({ error: 'Method not allowed' }),
     };
   }
 
   try {
-    console.log('Parsing request body');
-    const body = JSON.parse(event.body);
-    const userMessage = body.message;
-    console.log('User message:', userMessage);
+    // Parse the request body
+    const { message } = JSON.parse(event.body);
 
-    // Check if environment variables exist
-    console.log('API Key exists:', !!process.env.OPENAI_API_KEY);
-    console.log('Assistant ID exists:', !!process.env.ASSISTANT_ID);
-
-    // Initialize OpenAI with API key from environment variable
-    console.log('Initializing OpenAI');
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
-
-    console.log('Creating thread');
-    const thread = await openai.beta.threads.create();
-    console.log('Thread created:', thread.id);
-
-    // Add the user's message to the thread
-    console.log('Adding message to thread');
-    await openai.beta.threads.messages.create(thread.id, {
-      role: "user",
-      content: userMessage
-    });
-
-    console.log('Running assistant');
-    const run = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: process.env.ASSISTANT_ID
-    });
-
-    console.log('Waiting for completion');
-    let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
-    
-    while (runStatus.status === 'in_progress' || runStatus.status === 'queued') {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
-      console.log('Run status:', runStatus.status);
+    if (!message) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Message is required' }),
+      };
     }
 
-    console.log('Getting messages');
-    const messages = await openai.beta.threads.messages.list(thread.id);
-    const assistantMessage = messages.data[0].content[0].text.value;
-    console.log('Assistant response received');
+    // Get OpenAI API key from environment variables
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'OpenAI API key not configured' }),
+      };
+    }
+
+    // Healthcare navigation system prompt
+    const systemPrompt = `You are Health Road, an AI assistant helping Australians navigate the mental health system. You provide clear, practical guidance about accessing mental health services in Australia, with specific knowledge about the Northern Rivers region of NSW.
+
+Key areas you help with:
+- How to access psychologists, psychiatrists, counsellors
+- Medicare Mental Health Treatment Plans and rebates
+- Understanding costs and what's covered
+- Step-by-step guidance for getting started
+- Local services in Northern Rivers NSW when relevant
+
+Always provide:
+- Clear, actionable steps
+- Specific information about costs and Medicare rebates
+- Realistic timeframes (e.g., GP appointments, specialist wait times)
+- Encouraging, supportive tone
+- Disclaimer that this is guidance, not medical advice
+
+Keep responses conversational, helpful, and under 200 words unless detailed steps are needed.`;
+
+    // Call OpenAI API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: systemPrompt
+          },
+          {
+            role: 'user',
+            content: message
+          }
+        ],
+        max_tokens: 500,
+        temperature: 0.7,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('OpenAI API error:', error);
+      return {
+        statusCode: response.status,
+        headers,
+        body: JSON.stringify({ error: 'Failed to get response from AI' }),
+      };
+    }
+
+    const data = await response.json();
+    const aiResponse = data.choices[0].message.content;
 
     return {
       statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://healthcaresystem.com.au'
-      },
-      body: JSON.stringify({
-        response: assistantMessage
-      })
+      headers,
+      body: JSON.stringify({ 
+        response: aiResponse,
+        timestamp: new Date().toISOString()
+      }),
     };
-    
+
   } catch (error) {
-    console.error('Detailed error:', error);
+    console.error('Error:', error);
     return {
       statusCode: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://healthcaresystem.com.au'
-      },
-      body: JSON.stringify({ 
-        error: 'Sorry, I encountered an error. Please try again.' 
-      })
+      headers,
+      body: JSON.stringify({ error: 'Internal server error' }),
     };
   }
 };
