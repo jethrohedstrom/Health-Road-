@@ -354,7 +354,7 @@
     </div>
 
     <script>
-        const chatButton = document.getElementById('chatButton');
+ const chatButton = document.getElementById('chatButton');
         const chatContainer = document.getElementById('chatContainer');
         const chatClose = document.getElementById('chatClose');
         const chatMessages = document.getElementById('chatMessages');
@@ -365,7 +365,7 @@
         let isOpen = false;
 
         // Toggle chat window
-        chatButton.addEventListener('click', () => {
+        chatButton.addEventListener('click', function() {
             isOpen = !isOpen;
             chatContainer.style.display = isOpen ? 'flex' : 'none';
             if (isOpen) {
@@ -374,7 +374,7 @@
         });
 
         // Close chat window
-        chatClose.addEventListener('click', () => {
+        chatClose.addEventListener('click', function() {
             isOpen = false;
             chatContainer.style.display = 'none';
         });
@@ -437,7 +437,7 @@
             } catch (error) {
                 console.error('Network error:', error);
                 typingIndicator.style.display = 'none';
-                addMessage('Sorry, I'm having trouble connecting. Please check your internet connection and try again.', 'bot');
+                addMessage('Sorry, I am having trouble connecting. Please check your internet connection and try again.', 'bot');
             } finally {
                 // Re-enable input
                 chatInput.disabled = false;
@@ -448,7 +448,7 @@
 
         function addMessage(content, sender) {
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
+            messageDiv.className = 'message ' + sender;
             
             const messageContent = document.createElement('div');
             messageContent.className = 'message-content';
