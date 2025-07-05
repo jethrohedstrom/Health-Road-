@@ -7,10 +7,9 @@ const PINECONE_API_KEY = process.env.PINECONE_API_KEY;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const INDEX_NAME = 'health-road-knowledge';
 
-// Initialize clients
+// Initialize clients - using your actual host from Pinecone dashboard
 const pinecone = new Pinecone({ 
-  apiKey: PINECONE_API_KEY,
-  environment: 'us-east-1'
+  apiKey: PINECONE_API_KEY
 });
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
