@@ -3,12 +3,14 @@ const OpenAI = require('openai');
 
 const PINECONE_API_KEY = process.env.PINECONE_API_KEY;
 const PINECONE_ENVIRONMENT = process.env.PINECONE_ENVIRONMENT;
+const PINECONE_PROJECT_ID = process.env.PINECONE_PROJECT_ID;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const INDEX_NAME = 'health-road-knowledge';
 
 const pinecone = new Pinecone({ 
   apiKey: PINECONE_API_KEY,
-  environment: PINECONE_ENVIRONMENT
+  environment: PINECONE_ENVIRONMENT,
+  projectId: PINECONE_PROJECT_ID
 });
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
