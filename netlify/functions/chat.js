@@ -5,10 +5,14 @@ const OpenAI = require('openai');
 // Configuration - using environment variables for security
 const PINECONE_API_KEY = process.env.PINECONE_API_KEY;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const PINECONE_ENVIRONMENT = 'us-east-1';
 const INDEX_NAME = 'health-road-knowledge';
 
 // Initialize clients
-const pinecone = new Pinecone({ apiKey: PINECONE_API_KEY });
+const pinecone = new Pinecone({ 
+  apiKey: PINECONE_API_KEY,
+  environment: PINECONE_ENVIRONMENT 
+});
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
 exports.handler = async (event, context) => {
