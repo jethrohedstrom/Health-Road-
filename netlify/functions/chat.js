@@ -1,21 +1,17 @@
-// netlify/functions/chat.js
 const { Pinecone } = require('@pinecone-database/pinecone');
 const OpenAI = require('openai');
 
-// Environment variables (set these in Netlify dashboard)
 const PINECONE_API_KEY = process.env.PINECONE_API_KEY;
 const PINECONE_ENVIRONMENT = process.env.PINECONE_ENVIRONMENT;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const INDEX_NAME = 'health-road-knowledge';
 
-// Initialize clients
-const pinecone = new Pinecone({
+const pinecone = new Pinecone({ 
   apiKey: PINECONE_API_KEY,
   environment: PINECONE_ENVIRONMENT
 });
-const openai = new OpenAI({
-  apiKey: OPENAI_API_KEY
-});
+
+const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
 exports.handler = async (event, context) => {
   const headers = {
@@ -39,6 +35,7 @@ exports.handler = async (event, context) => {
 
   try {
     const { message } = JSON.parse(event.body);
+
     if (!message) {
       return {
         statusCode: 400,
@@ -47,72 +44,75 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Step 1: Create embedding from user message
-    const embeddingResponse = await openai.embeddings.create({
-      model: 'text-embedding-3-small',
-      input: message
+    console.log('User question:', message);
+
+    const questionEmbedding = await openai.embeddings.create({
+      model: 'text-embedding-3-large',
+      input: message,
     });
-    const embedding = embeddingResponse.data[0]?.embedding;
 
-    if (!embedding) {
-      throw new Error('Failed to generate embedding');
-    }
+    console.log('Created embedding for question');
 
-    // Step 2: Query Pinecone for top 3 relevant documents
     const index = pinecone.index(INDEX_NAME);
     const searchResults = await index.query({
-      vector: embedding,
+      vector: questionEmbedding.data[0].embedding,
       topK: 3,
       includeMetadata: true
     });
 
-    const context = (searchResults.matches || [])
-      .map(m => m.metadata?.content || '')
-      .join('\n\n')
-      .slice(0, 3000); // Safety trim
+    console.log(`Found ${searchResults.matches.length} relevant documents`);
 
-    const systemPrompt = `You are a helpful assistant for Health Road, a website that helps Australians navigate mental health services.
+    let context = '';
+    if (searchResults.matches && searchResults.matches.length > 0) {
+      context = searchResults.matches
+        .map(match => match.metadata.content)
+        .join('\n\n');
+    }
 
-Use the following context to answer questions about services, costs, and access. Be clear when you're answering from known info versus general guidance.
+    const systemPrompt = `You are a helpful assistant for Health Road, a website that helps Australians navigate mental health services. 
+
+Use the following context to answer questions about mental health services, costs, and access in Australia. If the context contains relevant information, use it to provide accurate answers. If the context doesn't contain relevant information, you can provide general helpful guidance but make it clear when you're going beyond the specific knowledge base.
 
 Context:
 ${context}
 
-Important: Prioritize context-based answers. If the context is unclear, respond cautiously and offer guidance or clarification.`;
+Important: Always prioritize information from the context above when it's relevant to the user's question.`;
 
-    // Step 3: Generate response
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
       ],
-      temperature: 0.7,
-      max_tokens: 500
+      max_tokens: 500,
+      temperature: 0.7
     });
 
-    const response = completion.choices?.[0]?.message?.content || 'Sorry, something went wrong.';
+    const response = completion.choices[0].message.content;
+
+    console.log('Generated response:', response);
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({
-        response,
+      body: JSON.stringify({ 
+        response: response,
         debug: {
-          contextLength: context.length,
-          matchedDocs: searchResults.matches?.length || 0
+          contextFound: searchResults.matches.length > 0,
+          relevantDocs: searchResults.matches.length
         }
       })
     };
 
   } catch (error) {
-    console.error('Chat function error:', error);
+    console.error('Error in chat function:', error);
+    
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({
+      body: JSON.stringify({ 
         error: 'Internal server error',
-        details: error.message
+        details: error.message 
       })
     };
   }
