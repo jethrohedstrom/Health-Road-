@@ -13,253 +13,111 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            background-color: white;
-            min-height: 100vh;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            color: #2c5282;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #4a5568;
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-        }
-
-        .description {
+            background-color: #ffffff;
             color: #2d3748;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-        }
-
-        .features {
-            list-style: none;
-            margin-bottom: 30px;
-        }
-
-        .features li {
-            padding: 10px 0;
-            border-bottom: 1px solid #e2e8f0;
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .features li:before {
-            content: "•";
-            color: #3182ce;
-            font-weight: bold;
-            position: absolute;
-            left: 10px;
-        }
-
-        .chat-instruction {
-            background-color: #ebf8ff;
-            border: 2px solid #3182ce;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 60px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            color: #718096;
-            font-size: 0.9rem;
-        }
-
-        /* Chat Interface Styles */
-        .chat-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .chat-button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #3182ce, #2c5282);
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(49, 130, 206, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            color: white;
-            font-size: 24px;
-        }
-
-        .chat-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(49, 130, 206, 0.6);
-        }
-
-        .chat-container {
-            position: absolute;
-            bottom: 80px;
-            right: 0;
-            width: 380px;
-            height: 500px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            display: none;
-            flex-direction: column;
+            height: 100vh;
             overflow: hidden;
         }
 
-        .chat-header {
-            background: linear-gradient(135deg, #3182ce, #2c5282);
-            color: white;
-            padding: 15px 20px;
-            font-weight: 600;
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 768px;
+            margin: 0 auto;
             position: relative;
         }
 
-        .chat-close {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px;
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #ffffff;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .chat-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .chat-subtitle {
+            font-size: 0.875rem;
+            color: #718096;
+            margin-top: 0.25rem;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
             overflow-y: auto;
-            background: #f8f9fa;
+            padding: 1rem;
+            scroll-behavior: smooth;
         }
 
         .message {
-            margin-bottom: 15px;
-            max-width: 85%;
+            margin-bottom: 1.5rem;
+            max-width: 100%;
         }
 
         .message.user {
-            margin-left: auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            display: flex;
+            justify-content: flex-start;
         }
 
         .message-content {
-            padding: 12px 16px;
-            border-radius: 18px;
-            font-size: 14px;
-            line-height: 1.4;
+            max-width: 85%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
         }
 
         .message.user .message-content {
-            background: #3182ce;
+            background-color: #1a202c;
             color: white;
-            border-bottom-right-radius: 6px;
+            border-bottom-right-radius: 0.25rem;
         }
 
         .message.bot .message-content {
-            background: white;
+            background-color: #f7fafc;
             color: #2d3748;
             border: 1px solid #e2e8f0;
-            border-bottom-left-radius: 6px;
-        }
-
-        .chat-input-container {
-            padding: 15px 20px;
-            border-top: 1px solid #e2e8f0;
-            background: white;
-        }
-
-        .chat-input-wrapper {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 25px;
-            outline: none;
-            font-size: 14px;
-            resize: none;
-            max-height: 100px;
-        }
-
-        .chat-input:focus {
-            border-color: #3182ce;
-        }
-
-        .chat-send {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #3182ce;
-            border: none;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease;
-        }
-
-        .chat-send:hover {
-            background: #2c5282;
-        }
-
-        .chat-send:disabled {
-            background: #cbd5e0;
-            cursor: not-allowed;
+            border-bottom-left-radius: 0.25rem;
         }
 
         .typing-indicator {
             display: none;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
-            max-width: 85%;
+            justify-content: flex-start;
+            margin-bottom: 1.5rem;
         }
 
         .typing-indicator .message-content {
-            background: white;
+            background-color: #f7fafc;
             border: 1px solid #e2e8f0;
-            border-bottom-left-radius: 6px;
-            padding: 12px 16px;
+            border-bottom-left-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .typing-dots {
             display: flex;
-            gap: 4px;
+            gap: 0.25rem;
         }
 
         .typing-dots span {
             width: 6px;
             height: 6px;
-            background: #cbd5e0;
+            background-color: #a0aec0;
             border-radius: 50%;
             animation: typing 1.4s infinite;
         }
@@ -268,121 +126,231 @@
         .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
 
         @keyframes typing {
-            0%, 60%, 100% { transform: scale(1); opacity: 0.7; }
-            30% { transform: scale(1.2); opacity: 1; }
+            0%, 60%, 100% { 
+                transform: scale(1); 
+                opacity: 0.7; 
+            }
+            30% { 
+                transform: scale(1.2); 
+                opacity: 1; 
+            }
         }
 
-        @media (max-width: 420px) {
+        .chat-input-container {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            background-color: #ffffff;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+            max-width: 100%;
+        }
+
+        .chat-input {
+            flex: 1;
+            min-height: 2.5rem;
+            max-height: 8rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            outline: none;
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: none;
+            background-color: #ffffff;
+            transition: border-color 0.2s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #4a5568;
+        }
+
+        .chat-input::placeholder {
+            color: #a0aec0;
+        }
+
+        .chat-send {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: #1a202c;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .chat-send:hover:not(:disabled) {
+            background-color: #2d3748;
+        }
+
+        .chat-send:disabled {
+            background-color: #e2e8f0;
+            cursor: not-allowed;
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            color: #718096;
+        }
+
+        .welcome-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-description {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
             .chat-container {
-                width: calc(100vw - 40px);
-                height: calc(100vh - 40px);
-                bottom: 20px;
-                right: 20px;
+                max-width: 100%;
             }
+            
+            .chat-header {
+                padding: 0.75rem;
+            }
+            
+            .chat-title {
+                font-size: 1rem;
+            }
+            
+            .chat-subtitle {
+                font-size: 0.8rem;
+            }
+            
+            .chat-messages {
+                padding: 0.75rem;
+            }
+            
+            .message-content {
+                max-width: 90%;
+                font-size: 0.875rem;
+            }
+            
+            .chat-input-container {
+                padding: 0.75rem;
+            }
+            
+            .chat-input {
+                font-size: 1rem; /* Prevents zoom on iOS */
+            }
+            
+            .welcome-message {
+                padding: 1.5rem 0.75rem;
+                margin-top: 1rem;
+            }
+            
+            .welcome-title {
+                font-size: 1.25rem;
+            }
+            
+            .welcome-description {
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 480px) {
+            .message-content {
+                max-width: 95%;
+            }
+            
+            .chat-input-wrapper {
+                gap: 0.5rem;
+            }
+        }
+
+        /* Scrollbar styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #cbd5e0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Mental Health Navigator</h1>
-        <p class="subtitle">Your AI guide to mental health services in Australia.</p>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-title">Health Road</div>
+            <div class="chat-subtitle">Mental Health Navigator for Australia</div>
+        </div>
         
-        <p class="description">I can help you understand:</p>
-        
-        <ul class="features">
-            <li>How to access psychologists, GPs, psychiatrists, and more</li>
-            <li>Medicare rebates and costs</li>
-            <li>What to expect in appointments</li>
-            <li>Finding local services in Northern Rivers NSW</li>
-            <li>Step-by-step guidance for getting started</li>
-        </ul>
-
-        <div class="chat-instruction">
-            <strong>Click the chat bubble in the bottom right to begin!</strong>
-            <br>Ask me questions like "How do I see a psychologist?" or "What does a Mental Health Treatment Plan cost?"
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <div class="welcome-title">Welcome to Health Road</div>
+                <div class="welcome-description">
+                    I'm here to help you navigate Australia's mental health system. Ask me about accessing psychologists, costs, Medicare rebates, or local services in Northern Rivers NSW.
+                </div>
+            </div>
         </div>
 
-        <div class="footer">
-            © 2025 Health Road | This is a prototype for testing purposes
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="message-content">
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Chat Widget -->
-    <div class="chat-widget">
-        <button class="chat-button" id="chatButton">💬</button>
         
-        <div class="chat-container" id="chatContainer">
-            <div class="chat-header">
-                Health Road Assistant
-                <button class="chat-close" id="chatClose">×</button>
-            </div>
-            
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    <div class="message-content">
-                        Hi! I'm your Health Road assistant. I can help you navigate Australia's mental health system. Ask me anything about accessing psychologists, costs, Medicare rebates, or local services in Northern Rivers NSW.
-                    </div>
-                </div>
-            </div>
-
-            <div class="typing-indicator" id="typingIndicator">
-                <div class="message-content">
-                    <div class="typing-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="chat-input-container">
-                <div class="chat-input-wrapper">
-                    <textarea 
-                        class="chat-input" 
-                        id="chatInput" 
-                        placeholder="Ask about mental health services..."
-                        rows="1"
-                    ></textarea>
-                    <button class="chat-send" id="chatSend">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                        </svg>
-                    </button>
-                </div>
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <textarea 
+                    class="chat-input" 
+                    id="chatInput" 
+                    placeholder="Ask about mental health services..."
+                    rows="1"
+                ></textarea>
+                <button class="chat-send" id="chatSend">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
 
     <script>
- const chatButton = document.getElementById('chatButton');
-        const chatContainer = document.getElementById('chatContainer');
-        const chatClose = document.getElementById('chatClose');
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
         const chatSend = document.getElementById('chatSend');
         const typingIndicator = document.getElementById('typingIndicator');
 
-        let isOpen = false;
-
-        // Toggle chat window
-        chatButton.addEventListener('click', function() {
-            isOpen = !isOpen;
-            chatContainer.style.display = isOpen ? 'flex' : 'none';
-            if (isOpen) {
-                chatInput.focus();
-            }
-        });
-
-        // Close chat window
-        chatClose.addEventListener('click', function() {
-            isOpen = false;
-            chatContainer.style.display = 'none';
-        });
-
         // Auto-resize textarea
         chatInput.addEventListener('input', function() {
             this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+            this.style.height = Math.min(this.scrollHeight, 128) + 'px';
         });
 
         // Send message on Enter (but not Shift+Enter)
@@ -395,6 +363,11 @@
 
         // Send message on button click
         chatSend.addEventListener('click', sendMessage);
+
+        // Focus input on page load
+        window.addEventListener('load', function() {
+            chatInput.focus();
+        });
 
         async function sendMessage() {
             const message = chatInput.value.trim();
@@ -414,8 +387,8 @@
             scrollToBottom();
 
             try {
-                // Call your Netlify function using the full URL
-                const response = await fetch('https://healthroad.netlify.app/.netlify/functions/chat', {
+                // Call the Netlify function
+                const response = await fetch('/.netlify/functions/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -461,7 +434,7 @@
         }
 
         function scrollToBottom() {
-            chatMessages.scrollTop = chatMessages.scrollTop + 1000;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     </script>
 </body>
