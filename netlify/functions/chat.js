@@ -81,7 +81,8 @@ ${context}
 Important: Always prioritize information from the context above when it's relevant to the user's question.`;
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+    model: 'gpt-4o-mini',
+      
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
