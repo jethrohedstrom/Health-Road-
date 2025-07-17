@@ -93,6 +93,24 @@
             border-bottom-left-radius: 0.25rem;
         }
 
+        /* Markdown formatting styles */
+        .message-content ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .message-content li {
+            margin: 0.25rem 0;
+        }
+
+        .message-content strong {
+            font-weight: 600;
+        }
+
+        .message-content em {
+            font-style: italic;
+        }
+
         .typing-indicator {
             display: none;
             justify-content: flex-start;
@@ -419,13 +437,39 @@
             }
         }
 
+        function parseMarkdown(text) {
+            // Convert markdown to HTML
+            return text
+                // Bold text: **text** or __text__
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/__(.*?)__/g, '<strong>$1</strong>')
+                // Italic text: *text* or _text_
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/_(.*?)_/g, '<em>$1</em>')
+                // Unordered lists: - item or * item
+                .replace(/^[\s]*[-\*]\s+(.+)$/gm, '<li>$1</li>')
+                // Wrap consecutive <li> tags in <ul>
+                .replace(/(<li>.*<\/li>)/gs, (match) => {
+                    return '<ul>' + match + '</ul>';
+                })
+                // Line breaks
+                .replace(/\n/g, '<br>');
+        }
+
         function addMessage(content, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message ' + sender;
             
             const messageContent = document.createElement('div');
             messageContent.className = 'message-content';
-            messageContent.textContent = content;
+            
+            if (sender === 'bot') {
+                // Parse markdown for bot messages
+                messageContent.innerHTML = parseMarkdown(content);
+            } else {
+                // Use textContent for user messages (security)
+                messageContent.textContent = content;
+            }
             
             messageDiv.appendChild(messageContent);
             chatMessages.appendChild(messageDiv);
