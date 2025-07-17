@@ -15,7 +15,8 @@ Health Road is a mental health navigation website for Australians, specifically 
 
 ### Frontend
 - Single-page application built with vanilla HTML, CSS, and JavaScript
-- Responsive chat widget positioned as floating button in bottom-right
+- ChatGPT-style conversational interface with full-page layout
+- Features auto-resizing textarea, typing indicators, and responsive design
 - Chat interface communicates with backend via fetch API to `/.netlify/functions/chat`
 
 ### Backend
@@ -24,8 +25,9 @@ Health Road is a mental health navigation website for Australians, specifically 
   - CORS headers for cross-origin requests
   - User message processing
   - OpenAI embeddings generation using `text-embedding-3-large`
-  - Pinecone vector search for relevant context retrieval
+  - Pinecone vector search for relevant context retrieval (top-3 matches)
   - OpenAI chat completion using GPT-4o-mini with RAG context
+  - System prompt engineering for Australian mental health focus
   - Response formatting and error handling
 
 ### Dependencies
@@ -60,5 +62,14 @@ Required environment variables for the chat function:
 - Chat endpoint: `https://healthroad.netlify.app/.netlify/functions/chat`
 - Pinecone index: `health-road-knowledge`
 - OpenAI models: `text-embedding-3-large` for embeddings, `gpt-4o-mini` for chat
-- Frontend chat logic in `index.html:399-447`
-- Message handling and API communication in `index.html:416-446`
+- Frontend chat logic embedded in `index.html` (single-file architecture)
+- Message handling and API communication via fetch API
+- Custom domain: `healthcaresystem.com.au`
+
+## RAG Implementation Details
+
+- Vector similarity search retrieves top-3 most relevant documents from Pinecone
+- Retrieved context is injected into system prompt for OpenAI chat completion
+- Temperature set to 0.7 for balanced creativity and consistency
+- Max tokens limited to 500 for concise, focused responses
+- Specialized system prompt for Australian mental health guidance

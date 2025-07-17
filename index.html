@@ -364,10 +364,6 @@
         // Send message on button click
         chatSend.addEventListener('click', sendMessage);
 
-        // Focus input on page load
-        window.addEventListener('load', function() {
-            chatInput.focus();
-        });
 
         async function sendMessage() {
             const message = chatInput.value.trim();
