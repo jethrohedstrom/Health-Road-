@@ -438,22 +438,28 @@
                 // Italic text: *text* or _text_
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/_(.*?)_/g, '<em>$1</em>')
-                // Convert line breaks to proper spacing
-                .replace(/\n\n/g, '</p><p>')
                 // Convert individual list items
                 .replace(/^[\s]*[-\*]\s+(.+)$/gm, '<li>$1</li>');
             
-            // Wrap consecutive <li> tags in <ul>
-            html = html.replace(/(<li>.*<\/li>)/gs, (match) => {
+            // Group consecutive <li> tags into single <ul> blocks
+            html = html.replace(/(<li>[\s\S]*?<\/li>)(\s*<li>[\s\S]*?<\/li>)*/g, (match) => {
                 return '<ul>' + match + '</ul>';
             });
             
-            // Wrap in paragraphs if not already wrapped
-            if (!html.includes('<p>') && !html.includes('<ul>')) {
-                html = '<p>' + html + '</p>';
-            }
+            // Split into paragraphs by double line breaks, but preserve list blocks
+            let parts = html.split(/\n\n+/);
+            let processedParts = parts.map(part => {
+                part = part.trim();
+                if (!part) return '';
+                // Don't wrap lists in paragraphs
+                if (part.includes('<ul>') || part.includes('<li>')) {
+                    return part;
+                }
+                // Wrap non-empty text in paragraphs
+                return '<p>' + part.replace(/\n/g, '<br>') + '</p>';
+            });
             
-            return html;
+            return processedParts.filter(part => part).join('');
         }
 
         function addMessage(content, sender) {
