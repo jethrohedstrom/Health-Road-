@@ -431,21 +431,29 @@
 
         function parseMarkdown(text) {
             // Convert markdown to HTML
-            return text
+            let html = text
                 // Bold text: **text** or __text__
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/__(.*?)__/g, '<strong>$1</strong>')
                 // Italic text: *text* or _text_
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/_(.*?)_/g, '<em>$1</em>')
-                // Unordered lists: - item or * item
-                .replace(/^[\s]*[-\*]\s+(.+)$/gm, '<li>$1</li>')
-                // Wrap consecutive <li> tags in <ul>
-                .replace(/(<li>.*<\/li>)/gs, (match) => {
-                    return '<ul>' + match + '</ul>';
-                })
-                // Line breaks
-                .replace(/\n/g, '<br>');
+                // Convert line breaks to proper spacing
+                .replace(/\n\n/g, '</p><p>')
+                // Convert individual list items
+                .replace(/^[\s]*[-\*]\s+(.+)$/gm, '<li>$1</li>');
+            
+            // Wrap consecutive <li> tags in <ul>
+            html = html.replace(/(<li>.*<\/li>)/gs, (match) => {
+                return '<ul>' + match + '</ul>';
+            });
+            
+            // Wrap in paragraphs if not already wrapped
+            if (!html.includes('<p>') && !html.includes('<ul>')) {
+                html = '<p>' + html + '</p>';
+            }
+            
+            return html;
         }
 
         function addMessage(content, sender) {
