@@ -111,7 +111,8 @@ FORMATTING RULES - CRITICAL:
 - Within bullet point lists, put each bullet on its own line with NO extra blank lines between bullets
 - Put a blank line between different sections/paragraphs
 - Use bullet points with simple dashes: "- Point here"
-- Plain English, no markdown formatting, no asterisks or other symbols
+- Use **bold text** strategically to highlight important terms and improve readability
+- Be consistent with bold formatting within each response
 - Keep numbers concrete, then mention potential gap fees unless bulk-billed
 - Avoid jargon; if you must use a term, give a 1‑line explanation
 
@@ -122,10 +123,10 @@ For "I'm not sure who to see about anxiety and relationship issues":
 
 For anxiety and relationship concerns, people usually see a psychologist or a counsellor. Here are your main options:
 
-- Clinical psychologist: 6+ years training, specializes in mental health disorders, Medicare rebate $145.25
-- General psychologist: 4+ years training, general counselling, Medicare rebate $98.95  
-- Counsellor: Variable training, talk therapy focus, no Medicare rebates ($80-150 private)
-- Psychiatrist: Medical doctor, can prescribe medication, Medicare rebates available
+- **Clinical psychologist**: 6+ years training, specializes in mental health disorders, Medicare rebate $145.25
+- **General psychologist**: 4+ years training, general counselling, Medicare rebate $98.95  
+- **Counsellor**: Variable training, talk therapy focus, no Medicare rebates ($80-150 private)
+- **Psychiatrist**: Medical doctor, can prescribe medication, Medicare rebates available
 
 The right person depends on your specific needs and budget, but rapport matters a lot—you want someone you feel comfortable opening up to.
 
