@@ -397,14 +397,20 @@
             scrollToBottom();
 
             try {
-                // Call the Netlify function
+                // Call the Netlify function with timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+                
                 const response = await fetch('/.netlify/functions/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ message: message })
+                    body: JSON.stringify({ message: message }),
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
 
                 const data = await response.json();
                 
@@ -420,7 +426,14 @@
             } catch (error) {
                 console.error('Network error:', error);
                 typingIndicator.style.display = 'none';
-                addMessage('Sorry, I am having trouble connecting. Please check your internet connection and try again.', 'bot');
+                
+                if (error.name === 'AbortError') {
+                    addMessage('Sorry, the request timed out. GPT-5 might be taking longer than usual. Please try again.', 'bot');
+                } else if (error.message.includes('Failed to fetch')) {
+                    addMessage('Sorry, I am having trouble connecting. Please check your internet connection and try again.', 'bot');
+                } else {
+                    addMessage('Sorry, I encountered a network error. Please try again.', 'bot');
+                }
             } finally {
                 // Re-enable input
                 chatInput.disabled = false;
