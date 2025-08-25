@@ -189,7 +189,8 @@ ${context}`;
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
       ],
-      max_completion_tokens: 4000
+      max_completion_tokens: 12000,
+      reasoning_effort: 'minimal'
     });
 
     console.log('✅ GPT-5 response received');
