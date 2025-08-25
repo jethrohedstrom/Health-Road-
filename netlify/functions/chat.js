@@ -194,9 +194,9 @@ ${context}`;
     });
     
     const r = await openai.responses.create({
-      model: 'gpt-5',
+      model: "gpt-5",
       messages: messages,
-      reasoning: { effort: 'high' },
+      reasoning: { effort: "high" },
       max_output_tokens: 12000
     });
 
