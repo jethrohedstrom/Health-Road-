@@ -19,7 +19,8 @@ if (!PINECONE_API_KEY || !PINECONE_ENVIRONMENT || !OPENAI_API_KEY) {
 }
 
 const pinecone = new Pinecone({ 
-  apiKey: PINECONE_API_KEY
+  apiKey: PINECONE_API_KEY,
+  environment: PINECONE_ENVIRONMENT
 });
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
