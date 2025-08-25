@@ -19,8 +19,7 @@ if (!PINECONE_API_KEY || !PINECONE_ENVIRONMENT || !OPENAI_API_KEY) {
 }
 
 const pinecone = new Pinecone({ 
-  apiKey: PINECONE_API_KEY,
-  environment: PINECONE_ENVIRONMENT
+  apiKey: PINECONE_API_KEY
 });
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
@@ -74,7 +73,9 @@ exports.handler = async (event, context) => {
     console.log('✅ Created embedding for question');
 
     console.log('🔄 Querying Pinecone...');
+    console.log('🔄 Initializing index:', INDEX_NAME);
     const index = pinecone.index(INDEX_NAME);
+    console.log('✅ Index initialized');
     const searchResults = await index.query({
       vector: questionEmbedding.data[0].embedding,
       topK: 3,
