@@ -8,9 +8,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const INDEX_NAME = 'health-road-knowledge';
 
 const pinecone = new Pinecone({ 
-  apiKey: PINECONE_API_KEY,
-  environment: PINECONE_ENVIRONMENT,
-  projectId: PINECONE_PROJECT_ID
+  apiKey: PINECONE_API_KEY
 });
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
@@ -153,7 +151,7 @@ ${context}`;
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
       ],
-      max_completion_tokens: 500
+      max_completion_tokens: 1500
     });
 
     const response = completion.choices[0].message.content;
