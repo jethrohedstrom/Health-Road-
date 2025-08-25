@@ -182,7 +182,7 @@ Is there anything specific about the process or costs you'd like me to explain f
 
 ${context}`;
 
-    console.log('🔄 Calling GPT-5...');
+    console.log('🔄 Calling GPT-5 with Responses API...');
     const messages = [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: message }
@@ -193,19 +193,19 @@ ${context}`;
       content: "Begin your answer immediately with a short summary before giving details."
     });
     
-    const completion = await openai.chat.completions.create({
+    const r = await openai.responses.create({
       model: 'gpt-5',
       messages: messages,
-      max_completion_tokens: 12000,
-      reasoning_effort: 'minimal'
+      reasoning: { effort: 'high' },
+      max_output_tokens: 12000
     });
 
     console.log('✅ GPT-5 response received');
-    const response = completion.choices[0].message.content;
+    const response = r.output_text ?? r.output?.[0]?.content?.[0]?.text ?? "";
 
     console.log('✅ Generated response:', response);
-    console.log('✅ Finish reason:', completion.choices[0].finish_reason);
-    console.log('✅ Token usage:', completion.usage);
+    console.log('✅ Response object:', r);
+    console.log('✅ Response length:', response?.length || 0);
 
     if (!response || response.trim() === '') {
       console.log('❌ Empty response detected, using fallback');
