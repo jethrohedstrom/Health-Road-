@@ -183,12 +183,19 @@ Is there anything specific about the process or costs you'd like me to explain f
 ${context}`;
 
     console.log('🔄 Calling GPT-5...');
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: message }
+    ];
+    
+    messages.unshift({
+      role: "system",
+      content: "Begin your answer immediately with a short summary before giving details."
+    });
+    
     const completion = await openai.chat.completions.create({
       model: 'gpt-5',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: message }
-      ],
+      messages: messages,
       max_completion_tokens: 12000,
       reasoning_effort: 'minimal'
     });
