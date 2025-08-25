@@ -7,6 +7,17 @@ const PINECONE_PROJECT_ID = process.env.PINECONE_PROJECT_ID;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const INDEX_NAME = 'health-road-knowledge';
 
+// Log environment variables for debugging
+console.log('🔄 Environment variables check:');
+console.log('- PINECONE_API_KEY:', PINECONE_API_KEY ? 'EXISTS' : 'MISSING');
+console.log('- PINECONE_ENVIRONMENT:', PINECONE_ENVIRONMENT ? `EXISTS (${PINECONE_ENVIRONMENT})` : 'MISSING');
+console.log('- PINECONE_PROJECT_ID:', PINECONE_PROJECT_ID ? `EXISTS (${PINECONE_PROJECT_ID})` : 'MISSING');
+console.log('- OPENAI_API_KEY:', OPENAI_API_KEY ? 'EXISTS' : 'MISSING');
+
+if (!PINECONE_API_KEY || !PINECONE_ENVIRONMENT || !OPENAI_API_KEY) {
+  throw new Error(`Missing required environment variables: ${!PINECONE_API_KEY ? 'PINECONE_API_KEY ' : ''}${!PINECONE_ENVIRONMENT ? 'PINECONE_ENVIRONMENT ' : ''}${!OPENAI_API_KEY ? 'OPENAI_API_KEY' : ''}`);
+}
+
 const pinecone = new Pinecone({ 
   apiKey: PINECONE_API_KEY,
   environment: PINECONE_ENVIRONMENT
