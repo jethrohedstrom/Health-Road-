@@ -34,9 +34,16 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    console.log('=== CHAT FUNCTION START ===');
+    console.log('🔄 Environment check:');
+    console.log('- OPENAI_API_KEY exists:', !!OPENAI_API_KEY);
+    console.log('- PINECONE_API_KEY exists:', !!PINECONE_API_KEY);
+    console.log('- INDEX_NAME:', INDEX_NAME);
+    
     const { message } = JSON.parse(event.body);
 
     if (!message) {
+      console.log('ERROR: No message provided');
       return {
         statusCode: 400,
         headers,
@@ -44,15 +51,17 @@ exports.handler = async (event, context) => {
       };
     }
 
-    console.log('User question:', message);
+    console.log('✅ User question:', message);
 
+    console.log('🔄 Creating embedding...');
     const questionEmbedding = await openai.embeddings.create({
       model: 'text-embedding-3-large',
       input: message,
     });
 
-    console.log('Created embedding for question');
+    console.log('✅ Created embedding for question');
 
+    console.log('🔄 Querying Pinecone...');
     const index = pinecone.index(INDEX_NAME);
     const searchResults = await index.query({
       vector: questionEmbedding.data[0].embedding,
@@ -60,7 +69,7 @@ exports.handler = async (event, context) => {
       includeMetadata: true
     });
 
-    console.log(`Found ${searchResults.matches.length} relevant documents`);
+    console.log(`✅ Found ${searchResults.matches.length} relevant documents`);
 
     let context = '';
     if (searchResults.matches && searchResults.matches.length > 0) {
@@ -144,9 +153,9 @@ Is there anything specific about the process or costs you'd like me to explain f
 
 ${context}`;
 
+    console.log('🔄 Calling GPT-5...');
     const completion = await openai.chat.completions.create({
-    model: 'gpt-5',
-      
+      model: 'gpt-5',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
@@ -154,9 +163,11 @@ ${context}`;
       max_completion_tokens: 1500
     });
 
+    console.log('✅ GPT-5 response received');
     const response = completion.choices[0].message.content;
 
-    console.log('Generated response:', response);
+    console.log('✅ Generated response:', response);
+    console.log('✅ Finish reason:', completion.choices[0].finish_reason);
 
     return {
       statusCode: 200,
@@ -171,14 +182,18 @@ ${context}`;
     };
 
   } catch (error) {
-    console.error('Error in chat function:', error);
+    console.error('❌ ERROR in chat function:', error.message);
+    console.error('❌ Full error object:', error);
+    console.error('❌ Error stack:', error.stack);
     
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
         error: 'Internal server error',
-        details: error.message 
+        details: error.message,
+        type: error.type || 'unknown',
+        code: error.code || 'unknown'
       })
     };
   }
