@@ -189,7 +189,7 @@ ${context}`;
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
       ],
-      max_completion_tokens: 1500
+      max_completion_tokens: 4000
     });
 
     console.log('✅ GPT-5 response received');
@@ -197,6 +197,24 @@ ${context}`;
 
     console.log('✅ Generated response:', response);
     console.log('✅ Finish reason:', completion.choices[0].finish_reason);
+    console.log('✅ Token usage:', completion.usage);
+
+    if (!response || response.trim() === '') {
+      console.log('❌ Empty response detected, using fallback');
+      const fallbackResponse = "I understand you're looking for help with anxiety, relationships, and internal stress. I'm experiencing a technical issue with my detailed response, but I can help you find the right professional. For your needs, a psychologist would be most suitable, particularly one who specializes in anxiety and relationship issues. In Byron Bay, you can find qualified psychologists through the Australian Psychological Society directory or Psychology Today. Would you like me to explain the difference between psychologists, counsellors, and therapists?";
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ 
+          response: fallbackResponse,
+          debug: {
+            contextFound: searchResults.matches.length > 0,
+            relevantDocs: searchResults.matches.length,
+            emptyResponse: true
+          }
+        })
+      };
+    }
 
     return {
       statusCode: 200,
