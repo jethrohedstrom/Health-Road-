@@ -147,7 +147,7 @@ Is there anything specific about the process or costs you'd like me to explain f
 ${context}`;
 
     const completion = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    model: 'gpt-5',
       
       messages: [
         { role: 'system', content: systemPrompt },
