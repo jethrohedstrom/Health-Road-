@@ -184,7 +184,7 @@ ${context}`;
 
     console.log('🔄 Calling GPT-5...');
     const completion = await openai.chat.completions.create({
-      model: 'gpt-5',
+      model: 'gpt-5-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
