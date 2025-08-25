@@ -18,10 +18,25 @@ if (!PINECONE_API_KEY || !PINECONE_ENVIRONMENT || !OPENAI_API_KEY) {
   throw new Error(`Missing required environment variables: ${!PINECONE_API_KEY ? 'PINECONE_API_KEY ' : ''}${!PINECONE_ENVIRONMENT ? 'PINECONE_ENVIRONMENT ' : ''}${!OPENAI_API_KEY ? 'OPENAI_API_KEY' : ''}`);
 }
 
-const pinecone = new Pinecone({ 
-  apiKey: PINECONE_API_KEY,
-  environment: PINECONE_ENVIRONMENT
+console.log('🔄 Initializing Pinecone with config:', {
+  apiKey: PINECONE_API_KEY ? '[PRESENT]' : '[MISSING]',
+  environment: PINECONE_ENVIRONMENT,
+  projectId: PINECONE_PROJECT_ID
 });
+
+const pineconeConfig = { 
+  apiKey: PINECONE_API_KEY,
+  environment: PINECONE_ENVIRONMENT,
+  projectId: PINECONE_PROJECT_ID
+};
+
+console.log('🔄 Final Pinecone config:', JSON.stringify(pineconeConfig, (key, value) => 
+  key === 'apiKey' ? '[REDACTED]' : value
+));
+
+console.log('🔄 About to create Pinecone client...');
+
+const pinecone = new Pinecone(pineconeConfig);
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
