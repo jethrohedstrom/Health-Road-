@@ -8,7 +8,8 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const INDEX_NAME = 'health-road-knowledge';
 
 const pinecone = new Pinecone({ 
-  apiKey: PINECONE_API_KEY
+  apiKey: PINECONE_API_KEY,
+  environment: PINECONE_ENVIRONMENT
 });
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
