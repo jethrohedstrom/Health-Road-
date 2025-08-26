@@ -183,19 +183,15 @@ Is there anything specific about the process or costs you'd like me to explain f
 ${context}`;
 
     console.log('🔄 Calling GPT-5 with Responses API...');
-    const messages = [
+    const input = [
       { role: 'system', content: systemPrompt },
+      { role: 'system', content: 'Begin your answer immediately with a short summary before giving details.' },
       { role: 'user', content: message }
     ];
-    
-    messages.unshift({
-      role: "system",
-      content: "Begin your answer immediately with a short summary before giving details."
-    });
-    
+
     const r = await openai.responses.create({
       model: "gpt-5",
-      messages: messages,
+      input,
       reasoning: { effort: "high" },
       max_output_tokens: 12000
     });
