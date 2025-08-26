@@ -192,8 +192,8 @@ ${context}`;
     const r = await openai.responses.create({
       model: "gpt-5",
       input,
-      reasoning: { effort: "high" },
-      max_output_tokens: 12000
+      reasoning: { effort: "low" },
+      max_output_tokens: 900
     });
 
     console.log('✅ GPT-5 response received');
