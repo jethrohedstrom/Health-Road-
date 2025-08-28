@@ -193,7 +193,7 @@ ${context}`;
       model: "gpt-5",
       input,
       reasoning: { effort: "low" },
-      max_output_tokens: 1500
+      max_output_tokens: 2500
     });
 
     console.log('✅ GPT-5 response received');
