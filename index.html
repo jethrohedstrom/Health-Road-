@@ -95,12 +95,26 @@
 
         /* Markdown formatting styles */
         .message-content ul {
-            margin: 0.5rem 0;
-            padding-left: 1.5rem;
+            margin: 0.75rem 0;
+            padding-left: 1.2rem;
         }
 
         .message-content li {
             margin: 0.25rem 0;
+            line-height: 1.5;
+        }
+
+        .message-content p {
+            margin: 0.75rem 0;
+            line-height: 1.6;
+        }
+
+        .message-content p:first-child {
+            margin-top: 0;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
         }
 
         .message-content strong {
@@ -355,6 +369,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
@@ -442,37 +457,8 @@
             }
         }
 
-        function parseMarkdown(text) {
-            // Convert markdown to HTML
-            let html = text
-                // Bold text: **text** or __text__
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/__(.*?)__/g, '<strong>$1</strong>')
-                // Italic text: *text* or _text_
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/_(.*?)_/g, '<em>$1</em>')
-                // Convert individual list items
-                .replace(/^[\s]*[-\*]\s+(.+)$/gm, '<li>$1</li>');
-            
-            // Group consecutive <li> tags into single <ul> blocks
-            html = html.replace(/(<li>[\s\S]*?<\/li>)(\s*<li>[\s\S]*?<\/li>)*/g, (match) => {
-                return '<ul>' + match + '</ul>';
-            });
-            
-            // Split into paragraphs by double line breaks, but preserve list blocks
-            let parts = html.split(/\n\n+/);
-            let processedParts = parts.map(part => {
-                part = part.trim();
-                if (!part) return '';
-                // Don't wrap lists in paragraphs
-                if (part.includes('<ul>') || part.includes('<li>')) {
-                    return part;
-                }
-                // Wrap non-empty text in paragraphs
-                return '<p>' + part.replace(/\n/g, '<br>') + '</p>';
-            });
-            
-            return processedParts.filter(part => part).join('');
+        function parseMarkdown(markdownText) {
+            return marked.parse(markdownText);
         }
 
         function addMessage(content, sender) {
