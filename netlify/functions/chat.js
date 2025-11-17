@@ -191,7 +191,7 @@ ${context}`;
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages,
-      max_tokens: 5000,
+      max_tokens: 1500,
       temperature: 0
     });
 
