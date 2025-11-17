@@ -182,25 +182,24 @@ Is there anything specific about the process or costs you'd like me to explain f
 
 ${context}`;
 
-    console.log('🔄 Calling GPT-5 with Responses API...');
-    const input = [
+    console.log('🔄 Calling GPT-4o with Chat Completions API...');
+    const messages = [
       { role: 'system', content: systemPrompt },
-      { role: 'system', content: 'Begin your answer immediately with a short summary before giving details.' },
       { role: 'user', content: message }
     ];
 
-    const r = await openai.responses.create({
-      model: "gpt-5",
-      input,
-      reasoning: { effort: "low" },
-      max_output_tokens: 5000
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages,
+      max_tokens: 5000,
+      temperature: 0
     });
 
-    console.log('✅ GPT-5 response received');
-    const response = r.output_text ?? r.output?.[0]?.content?.[0]?.text ?? "";
+    console.log('✅ GPT-4o response received');
+    const response = completion.choices[0]?.message?.content ?? "";
 
     console.log('✅ Generated response:', response);
-    console.log('✅ Response object:', r);
+    console.log('✅ Response object:', completion);
     console.log('✅ Response length:', response?.length || 0);
 
     if (!response || response.trim() === '') {
