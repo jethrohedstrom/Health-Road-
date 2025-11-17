@@ -246,6 +246,47 @@
             margin: 0 auto;
         }
 
+        /* Orange info boxes matching Health Maps style */
+        .info-box {
+            background-color: #fef3e2;
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .info-box-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background-color: #f59e0b;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: #92400e;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box-content {
+            color: #451a03;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
         /* Mobile optimizations */
         @media (max-width: 768px) {
             body {
@@ -298,6 +339,19 @@
             .welcome-description {
                 font-size: 0.875rem;
             }
+            
+            .info-box {
+                margin: 0.75rem;
+                padding: 0.875rem 1rem;
+            }
+            
+            .info-box-title {
+                font-size: 0.8rem;
+            }
+            
+            .info-box-content {
+                font-size: 0.8rem;
+            }
         }
 
         /* Very small screens */
@@ -342,6 +396,16 @@
                 <div class="welcome-title">Welcome to Health Maps</div>
                 <div class="welcome-description">
                     I'm here to help you navigate Australia's mental health system. Ask me about accessing psychologists, costs, Medicare rebates, or mental health services across Australia.
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <div class="info-box-title">
+                    <span class="info-box-icon">!</span>
+                    Currently in development
+                </div>
+                <div class="info-box-content">
+                    We're starting with Northern Rivers NSW and expanding Australia-wide. We can't recommend specific practitioners yet, but we can help you understand the system.
                 </div>
             </div>
         </div>
